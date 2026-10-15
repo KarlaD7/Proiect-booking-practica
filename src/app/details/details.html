@@ -1,0 +1,127 @@
+@if (hotel) {
+  <main class="details-container">
+    <h1 class="hotel-title">{{ hotel.nume }}</h1>
+    <p class="hotel-address">{{ hotel.adresa }}</p>
+
+    <div class="gallery-grid">
+      <div class="main-image">
+        <img [src]="hotel.imagineUrl" [alt]="hotel.nume">
+      </div>
+      <div class="secondary-images">
+        <img [src]="'/' + hotel.pozaNume + '2.jpg'" alt="Camera">
+        <img [src]="'/' + hotel.pozaNume + '3.jpg'" alt="Baie">
+      </div>
+    </div>
+
+    <div class="details-content">
+      
+      <div class="info-section">
+        <h3>Descriere hotel:</h3>
+        <p class="hotel-desc-text">{{ hotel.descriere }}</p>
+
+        <h3>Alege Tipul de Cameră Disponibilă:</h3>
+
+        @if (sugestieCamere) {
+          <div class="alert-sugestie">
+            {{ sugestieCamere }}
+          </div>
+        }
+
+        <div class="rooms-list">
+          @for (cam of tipuriCamere; track cam.id) {
+            <div 
+              class="room-card" 
+              [class.selected]="selectedCameraId === cam.id"
+              [class.disabled]="!cam.disponibila"
+              (click)="selecteazaCamera(cam)"
+            >
+              <div class="room-info">
+                <h4>{{ cam.nume }}</h4>
+                <p class="room-desc">{{ cam.descriere }}</p>
+
+                <div class="room-tags">
+                  <span class="badge-cap"> {{ cam.capacitate }} Persoane</span>
+                  
+                  @if (cam.disponibila) {
+                    <span class="badge-avail"> Disponibilă ({{ cam.camereDisponibile }} libere)</span>
+                  } @else {
+                    <span class="badge-unavail"> Indisponibilă</span>
+                  }
+                </div>
+
+                @if (!cam.disponibila && cam.motivIndisponibilitate) {
+                  <p style="color: #c53030; font-size: 0.82rem; margin: 8px 0 0 0; font-weight: 500;">
+                     {{ cam.motivIndisponibilitate }}
+                  </p>
+                }
+              </div>
+
+              <div class="room-price-side">
+                <p class="price-val">{{ cam.pretNoapte }} RON <span>/ noapte</span></p>
+                
+                <button class="btn-select-room" [disabled]="!cam.disponibila">
+                  {{ selectedCameraId === cam.id ? 'Selectat' : 'Selectează' }}
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="booking-card-form">
+        <h3>Rezervă sejurul tău</h3>
+        
+        <div class="form-group">
+          <label>Data Check-in</label>
+          <input 
+            type="date" 
+            [min]="minCheckInDate" 
+            [(ngModel)]="checkInDate" 
+            (change)="onCheckInChange()" 
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Data Check-out</label>
+          <input 
+            type="date" 
+            [min]="minCheckOutDate" 
+            [(ngModel)]="checkOutDate" 
+            (change)="incarcaTipuriCamere()" 
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Număr persoane</label>
+          <select [(ngModel)]="numarPersoane" (change)="evalueazaOptiuniAbalabile()">
+            <option [value]="1">1 Persoană</option>
+            <option [value]="2">2 Persoane</option>
+            <option [value]="3">3 Persoane</option>
+            <option [value]="4">4 Persoane</option>
+          </select>
+        </div>
+
+        @if (cameraSelectata) {
+          <div class="price-summary">
+            <p>Tip cameră: <strong>{{ cameraSelectata.nume }}</strong></p>
+            <p>Camere rezervate: <strong>{{ numarCamereNecesare }} x Cameră</strong></p>
+            <p>Preț / noapte / cameră: <strong>{{ cameraSelectata.pretNoapte }} RON</strong></p>
+            <hr class="divider">
+            <p class="total-price">Preț Total Estimat: <span>{{ pretTotalCalculat }} RON</span></p>
+          </div>
+        }
+
+        <button class="btn-book" (click)="creeazaRezervare()" [disabled]="!cameraSelectata">
+          Rezervați acum
+        </button>
+
+        @if (bookingMessage) {
+          <div [class]="isError ? 'alert-msg error' : 'alert-msg success'">
+            {{ bookingMessage }}
+          </div>
+        }
+      </div>
+
+    </div>
+  </main>
+}

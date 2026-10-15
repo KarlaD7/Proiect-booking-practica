@@ -1,0 +1,112 @@
+.hero-section {
+  text-align: center;
+  padding: 60px 20px 40px; 
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif !important;
+  font-size: 3.2rem; 
+  font-weight: 700;
+  color: #1c1815;
+  line-height: 1.25;
+  margin-bottom: 25px; 
+}
+
+.hero-title span {
+  font-family: 'Playfair Display', serif !important;
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: #c4654a;
+  line-height: 1.25;
+}
+
+.hero-description {
+  font-size: 1.25rem; 
+  line-height: 1.6;
+  color: #333333;
+  max-width: 750px;
+  margin: 0 auto 35px; 
+  font-weight: 400;
+}
+
+.btn-explore {
+  background-color: #4a6741;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-explore:hover {
+  background-color: #3b4b35;
+  transform: translateY(-2px);
+}
+
+.features-section {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.feature-card {
+  text-align: left;
+}
+
+.feature-line {
+  width: 45px;
+  height: 3px;
+  background-color: #c4654a;
+  margin-bottom: 20px;
+  border-radius: 2px;
+}
+
+.feature-title {
+  font-family: 'Playfair Display', serif !important;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1c1815;
+  margin: 0 0 15px 0;
+}
+
+.feature-text {
+  font-family: 'Fira Sans', sans-serif !important;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #4a4a4a;
+  margin: 0;
+}
+
+.account-cta {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-create-account {
+  background-color: #4a6741; 
+  color: #ffffff;
+  border: none;
+  padding: 14px 36px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.btn-create-account:hover {
+  background-color: #3b4b35;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}

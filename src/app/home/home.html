@@ -1,0 +1,73 @@
+<main style="max-width: 800px; margin: 40px auto; padding: 20px; font-family: sans-serif; text-align: center;">
+  
+  <section style="margin-bottom: 50px;">
+    <h1 class="hero-title">
+  Găsește refugiul potrivit<br />
+  în <span>locuri liniștite.</span>
+</h1>
+<p class="hero-description">
+    Descoperă locuri cu suflet, unde timpul curge mai încet. De la refugii din mijlocul naturii la hoteluri elegante din centrul orașelor
+  </p>
+
+  <button class="btn-explore" routerLink="/locations">
+    Explorează Ofertele
+  </button>
+  </section>
+
+  <section style="text-align: left;">
+    <h3 style="color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px;">Locații Recomandate:</h3>
+
+    @if (listaHoteluri && listaHoteluri.length > 0) {
+      <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+        @for (hotel of listaHoteluri; track $index) {
+          <div [routerLink]="['/details', hotel.id || hotel.Id || 1]" 
+               style="background-color: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 5px; cursor: pointer;">
+            <h4 style="margin: 0 0 5px 0; color: #c4654a;">{{ hotel.nume || hotel.Nume }}</h4>
+            <p style="margin: 0 0 5px 0; color: #555;"><strong>Locație:</strong> {{ hotel.locatie || hotel.Locatie }}</p>
+            <p style="margin: 0; font-size: 0.95rem; color: #777;">{{ hotel.descriere || hotel.Descriere }}</p>
+          </div>
+        }
+      </div>
+    } @else {
+      <p style="color: #999; font-style: italic; margin-top: 20px;">
+        Se încarcă locațiile recomandate sau serverul nu este pornit...
+      </p>
+    }
+  </section>
+
+  <section class="features-section">
+  <div class="features-grid">
+    
+    <div class="feature-card">
+      <div class="feature-line"></div>
+      <h3 class="feature-title">Design & Confort</h3>
+      <p class="feature-text">
+        Filtram totul astfel încât tu să găsești rapid doar spații în care noi înșine ne-am caza cu drag.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-line"></div>
+      <h3 class="feature-title">Comunicare simplă</h3>
+      <p class="feature-text">
+       Conversație directă cu proprietarii. Fără intermediari sau centre de suport automate.
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-line"></div>
+      <h3 class="feature-title">Fără costuri ascunse</h3>
+      <p class="feature-text">
+        Fără taxe ascunse la final. Prețul afișat este prețul pe care îl plătești.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="account-cta">
+    <button class="btn-create-account" routerLink="/cont">
+      Creează cont
+    </button>
+  </div>
+</section>
+
+</main>

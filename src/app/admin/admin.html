@@ -1,0 +1,115 @@
+<main class="admin-container">
+  <header class="admin-header">
+    <h1>Panou Administrator Hotel</h1>
+    <p>Gestiunea rezervărilor, verificare disponibilitate și clienți</p>
+  </header>
+
+  <section class="filter-card">
+    <h3>Filtre de căutare</h3>
+    
+    <div class="filter-grid">
+      
+      <div class="filter-group">
+        <label>Selectează Hotelul:</label>
+        <select [(ngModel)]="selectedHotelId" (change)="aplicaFiltre()">
+          <option [value]="0">Toate Hotelurile</option>
+          @for (h of listaHoteluri; track h.id) {
+            <option [value]="h.id">{{ h.nume }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Verifică o Zi Specifică:</label>
+        <input 
+          type="date" 
+          [(ngModel)]="selectedDate" 
+          (change)="aplicaFiltre()" 
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>Căutare după Client / Cameră:</label>
+        <input 
+          type="text" 
+          placeholder="ex: Popescu, Dublă, etc." 
+          [(ngModel)]="cautareClient" 
+          (input)="aplicaFiltre()" 
+        />
+      </div>
+
+      <div class="filter-group btn-reset-box">
+        <button class="btn-reset" (click)="resetFiltre()">Resetare Filtre</button>
+      </div>
+
+    </div>
+
+    @if (selectedDate) {
+      <div class="date-summary-alert">
+        Afișare rezervări active pentru data de <strong>{{ selectedDate }}</strong>. Total camere rezervate în această zi: <strong>{{ numarCamereOcupateInZi }}</strong>
+      </div>
+    }
+  </section>
+
+  <section class="table-card">
+    <div class="table-header-info">
+      <h3>Lista Rezervărilor ({{ rezervariFiltrate.length }})</h3>
+    </div>
+
+    @if (rezervariFiltrate.length === 0) {
+      <div class="no-results">
+        <p>Nu a fost găsită nicio rezervare pentru filtrele selectate.</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>#ID</th>
+              <th>Client</th>
+              <th>Hotel</th>
+              <th>Tip Cameră</th>
+              <th>Perioadă (CheckIn - CheckOut)</th>
+              <th>Preț Total</th>
+              <th>Status</th>
+              <th>Acțiuni</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of rezervariFiltrate; track r.id) {
+              <tr>
+                <td>#{{ r.id }}</td>
+                <td>
+                  <strong>{{ r.numeClient }}</strong><br>
+                  <small class="text-muted">{{ r.emailClient }}</small>
+                </td>
+                <td>{{ r.numeHotel }}</td>
+                <td><span class="badge-room">{{ r.numeCamera }}</span></td>
+                <td>
+                  {{ r.dataCheckIn }} <br> ➔ {{ r.dataCheckOut }}
+                </td>
+                <td class="price-col">{{ r.pretTotal }} RON</td>
+                <td>
+                  <span [class]="'badge-status ' + (r.status === 'Confirmată' ? 'confirmed' : (r.status === 'Anulată' ? 'cancelled' : 'pending'))">
+                    {{ r.status }}
+                  </span>
+                </td>
+                <td>
+                  <select 
+                    class="select-status" 
+                    [ngModel]="r.status" 
+                    (ngModelChange)="schimbaStatus(r, $event)"
+                  >
+                    <option value="Confirmată">Confirmată</option>
+                    <option value="În așteptare">În așteptare</option>
+                    <option value="Anulată">Anulată</option>
+                  </select>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</main>

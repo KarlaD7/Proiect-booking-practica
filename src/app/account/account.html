@@ -1,0 +1,194 @@
+<main class="account-container">
+
+  @if (!isLoggedIn) {
+    <section class="form-card">
+      <h2 class="form-title">
+        {{ isRegisterMode ? 'Creare Cont Nou' : 'Autentificare' }}
+      </h2>
+      <p class="form-subtitle">
+        {{ isRegisterMode ? 'Completează datele pentru a-ți crea un cont.' : 'Introdu datele contului tău pentru a accesa platforma.' }}
+      </p>
+
+      @if (message) {
+        <div [class]="isError ? 'alert alert-danger' : 'alert alert-success'">
+          {{ message }}
+        </div>
+      }
+
+      <form (ngSubmit)="isRegisterMode ? onRegister() : onLogin()">
+        
+        @if (isRegisterMode) {
+          <div class="form-group">
+            <label>Nume complet</label>
+            <input 
+              type="text" 
+              [(ngModel)]="nume" 
+              name="nume" 
+              placeholder="ex: Popescu Ion" 
+              required 
+            />
+          </div>
+        }
+
+        <div class="form-group">
+          <label>Adresă Email</label>
+          <input 
+            type="email" 
+            [(ngModel)]="loginEmail" 
+            name="email" 
+            placeholder="admin@cozystay.ro sau nume@email.com" 
+            required 
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Parolă</label>
+          <input 
+            type="password" 
+            [(ngModel)]="loginPass" 
+            name="parola" 
+            placeholder="••••••••" 
+            required
+          />
+        </div>
+
+        @if (isRegisterMode) {
+          <div class="form-group">
+            <label>Număr Telefon (opțional)</label>
+            <input 
+              type="text" 
+              [(ngModel)]="telefon" 
+              name="telefon" 
+              placeholder="07xx xxx xxx" 
+            />
+          </div>
+        }
+
+        <button type="submit" class="btn-submit">
+          {{ isRegisterMode ? 'Înregistrează-te' : 'Conectare' }}
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 20px; font-family: sans-serif; font-size: 0.95rem;">
+        @if (isRegisterMode) {
+          <p>Ai deja un cont? <a (click)="toggleMode()" style="color: #c4654a; font-weight: bold; cursor: pointer; text-decoration: underline;">Conectează-te aici</a></p>
+        } @else {
+          <p>Nu ai cont? <a (click)="toggleMode()" style="color: #c4654a; font-weight: bold; cursor: pointer; text-decoration: underline;">Creează un cont nou</a></p>
+        }
+      </div>
+
+    </section>
+  } 
+  
+  @else {
+    <div class="profile-layout">
+      <section class="profile-card">
+        <div class="avatar-circle">
+          {{ (currentUser.nume || currentUser.Nume || currentUser.email || 'U').charAt(0).toUpperCase() }}
+        </div>
+        <div class="profile-details">
+          <h2>{{ currentUser.nume || currentUser.Nume || 'Utilizator CozyStay' }}</h2>
+          <p class="email-text">{{ currentUser.email || currentUser.Email }}</p>
+          <p class="phone-text">{{ currentUser.telefon || currentUser.Telefon || 'Nespecificat' }}</p>
+          
+          <span class="badge-member">
+            {{ currentUser.rol === 'ADMIN' ? 'Administrator' : 'Cont Activ' }}
+          </span>
+        </div>
+
+        <div class="profile-actions" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+          @if (currentUser.rol === 'ADMIN') {
+            <button 
+              routerLink="/admin" 
+              style="width: 100%; background-color: #4a5d43; color: white; border: none; padding: 11px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+               Deschide Panoul Admin
+            </button>
+          }
+
+          <button class="btn-secondary" (click)="logout()">Deconectare</button>
+        </div>
+      </section>
+
+      <!-- VIZUALIZARE PENTRU ADMIN -->
+      @if (currentUser.rol === 'ADMIN') {
+        <section class="bookings-card">
+          <h3 style="font-family: 'Playfair Display', serif; color: #1c1815;">Panou de Control Administrator</h3>
+          <p style="color: #4a5568; margin-bottom: 20px; line-height: 1.5;">
+            Sunteți conectat ca <strong>Administrator</strong>. Din acest cont puteți gestiona toate hotelurile, verfica disponibilitatea camerelor pe zile și vizualiza rezervările efectuate de clienți.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            <div style="background: #fbf8f2; border: 1px solid #e2dacd; padding: 16px; border-radius: 10px;">
+              <h4 style="margin: 0 0 5px 0; color: #1c1815; font-size: 0.95rem;">Hoteluri Înregistrate</h4>
+              <p style="margin: 0; font-size: 1.4rem; font-weight: bold; color: #c4654a;">3 Proprietăți</p>
+            </div>
+
+            <div style="background: #fbf8f2; border: 1px solid #e2dacd; padding: 16px; border-radius: 10px;">
+              <h4 style="margin: 0 0 5px 0; color: #1c1815; font-size: 0.95rem;">Verificare Ocupare</h4>
+              <p style="margin: 0; font-size: 0.88rem; color: #4a5568;">Filtrare live după dată și hotel</p>
+            </div>
+          </div>
+
+          <a routerLink="/admin" style="display: inline-block; background-color: #c4654a; color: white; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: bold;">
+            Accesează Lista Completă de Rezervări ➔
+          </a>
+        </section>
+      } 
+      
+      <!-- VIZUALIZARE  CLIENT (REZERVĂRI) -->
+      @else {
+        <section class="bookings-card">
+          <h3>Rezervările tale</h3>
+
+          @if (isLoadingBookings) {
+            <p class="loading-text">Se încarcă rezervările...</p>
+          } @else if (rezervari.length === 0) {
+            <div class="no-bookings">
+              <p>Nu ai nicio rezervare activă momentan.</p>
+              <a routerLink="/locations" class="btn-explore">Explorează Cazări</a>
+            </div>
+          } @else {
+            <div class="bookings-list">
+              @for (booking of rezervari; track (booking.id || booking.ID || $index)) {
+                <div class="booking-card-item">
+                  <img [src]="getPozaHotel(booking.roomID || booking.RoomID || 1)" [alt]="getNumeHotel(booking.roomID || booking.RoomID || 1)" class="booking-img">
+                  
+                  <div class="booking-info">
+                    <h4>{{ getNumeHotel(booking.roomID || booking.RoomID || 1) }}</h4>
+                    <p class="booking-dates">
+                      {{ formatData(booking.dataCheckIn || booking.DataCheckIn) }} — {{ formatData(booking.dataCheckOut || booking.DataCheckOut) }}
+                    </p>
+                    <p class="booking-price">
+                      Preț Total: <strong>{{ booking.pretTotal || booking.PretTotal || 1000 }} RON</strong>
+                    </p>
+
+                    <span [ngClass]="{
+                      'badge-status': true,
+                      'status-pending': (booking.status || booking.Status) === 'În așteptare',
+                      'status-confirmed': (booking.status || booking.Status) === 'Confirmată',
+                      'status-cancelled': (booking.status || booking.Status) === 'Anulată'
+                    }">
+                      {{ booking.status || booking.Status || 'În așteptare' }}
+                    </span>
+                  </div>
+
+                  <div class="booking-actions">
+                    @if ((booking.status || booking.Status) !== 'Anulată') {
+                      <button class="btn-cancel" (click)="anuleazaRezervare(booking.id || booking.ID || 1)">
+                        Anulează rezervarea
+                      </button>
+                    } @else {
+                      <span class="cancelled-text">Cerere Anulată</span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </section>
+      }
+
+    </div>
+  }
+
+</main>

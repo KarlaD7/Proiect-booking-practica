@@ -1,0 +1,68 @@
+<main style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+ <section style="background-color: #87a878; padding: 30px; border-radius: 15px; margin-bottom: 40px;">
+    <h2 style="color: #ececec; margin-top: 0; margin-bottom: 25px; font-size: 1.8rem;">
+      Cele mai bune opțiuni de cazare pentru sejurul dumneavoastră
+    </h2>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #ececec; padding: 15px; border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+      <input type="text" placeholder="Introduceți destinația" style="flex: 1; min-width: 150px; padding: 10px 15px; border: 1px solid #ccc; border-radius: 20px;" />
+      <input type="date" placeholder="Data check-in" style="padding: 10px 15px; border: 1px solid #ccc; border-radius: 20px;" />
+      <input type="date" placeholder="Data check-out" style="padding: 10px 15px; border: 1px solid #ccc; border-radius: 20px;" />
+      
+      <select style="padding: 10px 15px; border: 1px solid #ccc; border-radius: 20px;">
+        <option>Selectați numărul de camere</option>
+        <option>1 Cameră</option>
+        <option>2 Camere</option>
+        <option>3+ Camere</option>
+      </select>
+
+      <select style="padding: 10px 15px; border: 1px solid #ccc; border-radius: 20px;">
+        <option>Selectați numărul de oaspeți</option>
+        <option>1 Oaspete</option>
+        <option>2 Oaspeți</option>
+        <option>Familie</option>
+      </select>
+
+      <button style="background-color: #4a6741; color: white; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; cursor: pointer;">
+        Search
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; color: #111;">
+      Oferte speciale în orașe populare:
+    </h2>
+
+    @if (listaHoteluri && listaHoteluri.length > 0) {
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+        @for (hotel of listaHoteluri; track $index) {
+          <div [routerLink]="['/details', hotel.id || hotel.Id || 1]" 
+               style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            
+            <h3 style="margin: 0 0 10px 0; color: #c4654a; font-size: 1.3rem;">
+              {{ hotel.nume || hotel.Nume }}
+            </h3>
+            
+            <p style="margin: 0 0 10px 0; color: #444; font-weight: 600;">
+              {{ hotel.locatie || hotel.Locatie }}
+            </p>
+            
+            <p style="margin: 0; color: #666; font-size: 0.95rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+              {{ hotel.descriere || hotel.Descriere }}
+            </p>
+
+            <div style="margin-top: 15px; text-align: right;">
+              <span style="color: #c4654a; font-weight: bold; font-size: 0.9rem;">Vezi detalii &rarr;</span>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <p style="color: #888; font-style: italic; font-size: 1.1rem; padding: 10px 0;">
+        Se încarcă locațiile din baza de date...
+      </p>
+    }
+  </section>
+
+</main>
